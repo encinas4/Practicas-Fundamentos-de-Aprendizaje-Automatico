@@ -7,39 +7,49 @@ class Datos(object):
   # TODO: procesar el fichero para asignar correctamente las variables tipoAtributos, nombreAtributos, nominalAtributos, datos y diccionarios
 	def __init__(self, nombreFichero):
 		with open(nombreFichero, "r") as f:
-			file =f.read();
-			file.replace("/n","");
-			numFilas=f.readline().atoi();
-			atributos=f.readline();
-			tipos=f.readline().split(",");
+			numFilas=f.readline().rstrip();
+			print(numFilas);
+			atributos=f.readline().rstrip().split(",");
+			print(atributos);
+			tipos=f.readline().rstrip().split(",");
+			print(tipos);
 			posiciones=[];
-			diccionario=[];
+
+			#Creacion del diccionario
+			diccionario=[]*len(atributos);
+			print(diccionario);
 
 			i=0;
 			for x in tipos:
-				ele = [];
+				ele = {};
 				diccionario.append(ele);
 
 				if x == "Nominal":
 					posiciones.append(i);
-					i=+1;
+					i=i+1;
 
 			for x in f:
-				fila = x.split(",");
+				fila = x.rstrip().split(",");
 				i=0;
 				for y in fila:
-					if i in posiciones and y not in diccionario[i]:
-						diccionario[i].append(y);
-					i=+1;
+					if i in posiciones:
+						diccionario[i].update({y:len(diccionario[i])});
+						 
+					i=i+1;
 
-			for element in diccionario:
-				element.tolist();
-				element.sort();
-				element.toarray();
-				print(element);
+			print(posiciones);
+			print(diccionario);
+
+			#Ordenamos los elementos del diccionario
+			#for x in posiciones:
+			#	diccionario[x] = sorted(diccionario[x]);
+
+			#print(diccionario);
+
+			#Rellenamos la polla de pelofeo que cabe en la matriz
 
     		
-  # TODO: implementar en la práctica 1
+	#TODO: implementar en la práctica 1
 	def extraeDatos(idx):
 		pass
 
