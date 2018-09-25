@@ -5,7 +5,7 @@ class Datos(object):
   
 	TiposDeAtributos=('Continuo','Nominal')
  
-  # TODO: procesar el fichero para asignar correctamente las variables tipoAtributos, nombreAtributos, nominalAtributos, datos y diccionarios
+  # TODO: procesar el fichero para asignar correctamente las variables tipoAtributos, nombreAtributos, nominalAtributos, datos y auxDic
 	def __init__(self, nombreFichero):
 		with open(nombreFichero, "r") as f:
 			numFilas=f.readline().rstrip();		# NUMERO DE FILAS DEL CONJUNTO DE DATOS
@@ -16,8 +16,9 @@ class Datos(object):
 			datos = np.empty([numeroAtributos,int(numFilas)], dtype=int); 
 
 			#Creacion del diccionario
-			#diccionarios=[]*numeroAtributos;
-			#print(diccionarios);
+			auxDic=[set() for i in range(numeroAtributos)];
+			#print(auxDic);
+			diccionarios = [None for i in range(numeroAtributos)];
 
 			i=0;
 			for x in tipoAtributos:
@@ -27,32 +28,29 @@ class Datos(object):
 
 			content = f.read()
 			file = content.split("\n")
-			diccionarios = [collections.OrderedDict()]*numeroAtributos;
+			#auxDic = [collections.OrderedDict()]*numeroAtributos;
 
 			for fila in file:
 				i=0
 				for x in fila.rstrip().split(","):
 					print(x)
 					print(i);
-					if i in posiciones:
-						diccionarios[i].update({x:0})
+					if i in posiciones and x not in auxDic[i]:
+						l=set();
+						l = auxDic[i]
+						l.add(x);
+						auxDic[i]= l;
 					i=i+1
-
-			"""for x in f:
-				fila = x.rstrip().split(",");
-				i=0;
-				for y in fila:
-					if i in posiciones:
-						diccionarios[i].update({y:len(diccionarios[i])});
-						 
-					i=i+1;"""
-
-
-
-			print(posiciones);
-			print(diccionarios);
-
-    		
+			i=0		
+			for dic in auxDic:
+				j=0
+				aux ={}
+				for clave in sorted(dic):
+					aux.update({clave:j})
+					j=j+1
+				diccionarios[i]=aux
+				i=i+1    		
+		print(diccionarios)
 	#TODO: implementar en la práctica 1
 	def extraeDatos(idx):
 		pass
