@@ -8,40 +8,49 @@ class Datos(object):
   # TODO: procesar el fichero para asignar correctamente las variables tipoAtributos, nombreAtributos, nominalAtributos, datos y auxDic
 	def __init__(self, nombreFichero):
 		with open(nombreFichero, "r") as f:
-			numFilas=f.readline().rstrip();		# NUMERO DE FILAS DEL CONJUNTO DE DATOS
-			nombreAtributos=f.readline().rstrip().split(",");	# LISTA CON EL NOMBRE DE LOS ATRIBUTOS
-			tipoAtributos=f.readline().rstrip().split(",");		# LISTA CON LOS TIPOS DE LOS ATRIBUTOS
+			# Numero de filas del conjunto de datos
+			numFilas=f.readline().rstrip();
+
+			# Lista con el nombre de los atributos
+			nombreAtributos=f.readline().rstrip().split(",");
+
+			# Lista con los tipos de los atributos
+			tipoAtributos=f.readline().rstrip().split(",");
+
+			# Array con las posiciones de los atributos nominales
 			posiciones=[];
 			numeroAtributos = len(nombreAtributos);
-			datos = np.empty([numeroAtributos,int(numFilas)], dtype=int); 
 
-			#Creacion del diccionario
+			# Matriz en la que guardaremos los datos
+			datos = np.empty([int(numFilas),numeroAtributos], dtype=float); 
+
+			# Creacion del diccionario y el diccionario auxiliar (para ordenar)
 			auxDic=[set() for i in range(numeroAtributos)];
-			#print(auxDic);
 			diccionarios = [None for i in range(numeroAtributos)];
 
+			# Insertamos las posiciones de los atributos nominales
 			i=0;
 			for x in tipoAtributos:
 				if x == "Nominal":
 					posiciones.append(i);
-					i=i+1;
+				i=i+1;
 
 			content = f.read()
-			file = content.split("\n")
-			#auxDic = [collections.OrderedDict()]*numeroAtributos;
+			file = content.splitlines()
 
+			# Creamos el diccionario auxiliar con los atributos
 			for fila in file:
 				i=0
 				for x in fila.rstrip().split(","):
-					print(x)
-					print(i);
 					if i in posiciones and x not in auxDic[i]:
 						l=set();
 						l = auxDic[i]
 						l.add(x);
 						auxDic[i]= l;
 					i=i+1
-			i=0		
+
+			# Creamos el diccionario ordenando alfabeticamente a partir del auxiliar
+			i=0
 			for dic in auxDic:
 				j=0
 				aux ={}
@@ -50,7 +59,23 @@ class Datos(object):
 					j=j+1
 				diccionarios[i]=aux
 				i=i+1    		
-		print(diccionarios)
+		#print(diccionarios)
+
+		# Insertamos los atributos en la matriz
+		f=0
+		for fila in file:
+			i=0
+			for x in fila.rstrip().split(","):
+				if i in posiciones:			# Si es nominal, se convierte
+					datos[f][i] = diccionarios[i][x]
+				else:						# Si es discreto, se inserta
+					datos[f][i] = x
+				i=i+1
+			f=f+1
+
+		#print(datos)
+
+
 	#TODO: implementar en la práctica 1
 	def extraeDatos(idx):
 		pass
