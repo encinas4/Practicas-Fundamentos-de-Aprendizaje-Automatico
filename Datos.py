@@ -3,34 +3,38 @@ import collections as collections
 
 class Datos(object):
   
-	TiposDeAtributos=('Continuo','Nominal')
+	TiposDeAtributos=('Continuo','Nominal')	
+	
  
   # TODO: procesar el fichero para asignar correctamente las variables tipoAtributos, nombreAtributos, nominalAtributos, datos y auxDic
 	def __init__(self, nombreFichero):
 		with open(nombreFichero, "r") as f:
 			# Numero de filas del conjunto de datos
-			numFilas=f.readline().rstrip();
+			self.numFilas=f.readline().rstrip();
 
 			# Lista con el nombre de los atributos
-			nombreAtributos=f.readline().rstrip().split(",");
+			self.nombreAtributos=f.readline().rstrip().split(",");
 
 			# Lista con los tipos de los atributos
-			tipoAtributos=f.readline().rstrip().split(",");
+			self.tipoAtributos=f.readline().rstrip().split(",");
 
 			# Array con las posiciones de los atributos nominales
 			posiciones=[];
-			numeroAtributos = len(nombreAtributos);
+			self.numeroAtributos = len(self.nombreAtributos);
 
 			# Matriz en la que guardaremos los datos
-			datos = np.empty([int(numFilas),numeroAtributos], dtype=float); 
+			datos = np.empty([int(self.numFilas),self.numeroAtributos], dtype=float);
 
 			# Creacion del diccionario y el diccionario auxiliar (para ordenar)
-			auxDic=[set() for i in range(numeroAtributos)];
-			diccionarios = [None for i in range(numeroAtributos)];
+			auxDic=[set() for i in range(self.numeroAtributos)];
+			diccionarios = [None for i in range(self.numeroAtributos)];
 
 			# Insertamos las posiciones de los atributos nominales
 			i=0;
-			for x in tipoAtributos:
+			for x in self.tipoAtributos:
+				if x != "Nominal" and x !="Continuo":
+					raise Exception(ValueError)
+
 				if x == "Nominal":
 					posiciones.append(i);
 				i=i+1;
@@ -72,7 +76,7 @@ class Datos(object):
 					datos[f][i] = x
 				i=i+1
 			f=f+1
-
+		self.datos = datos
 		#print(datos)
 
 

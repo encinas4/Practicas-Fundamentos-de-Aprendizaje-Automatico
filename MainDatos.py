@@ -9,3 +9,4 @@ from Datos import Datos
 
 #dataset=Datos('f:/temp/german.data')
 dataset=Datos('ConjuntosDatos/german.data')
+print(dataset.datos);
